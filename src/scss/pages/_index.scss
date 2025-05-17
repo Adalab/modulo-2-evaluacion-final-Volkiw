@@ -1,0 +1,16 @@
+@use '../core/variables' as vars;
+
+.main__list {
+  padding-left: 2rem;
+  padding-bottom: 20px;
+}
+
+body {
+  padding: 2rem;
+  height: 100vh;
+  background-color: #f6f6f6;
+  font-family: vars.$font-main;
+}
+
+
+
