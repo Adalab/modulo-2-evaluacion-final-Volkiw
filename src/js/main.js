@@ -34,7 +34,6 @@ function itemSelected(sample){
 
 function deleteSelectedProduct(ev){
     let binId = ev.currentTarget.id;
-    console.log(binId);
     const index = cart.findIndex(cart => "bin-" + cart.id === binId);
     cart.splice(index, 1);
     localStorage.setItem("cart", JSON.stringify(cart));
