@@ -10,4 +10,4 @@ En este proyecto pondremos a prueba los conocimientos del módulo 2 junto con lo
 
 ### Visualizar el proyecto
 
-> Puedes acceder a través de este enlace: [Tienda de Volkiw](https://beta.adalab.es/modulo-2-evaluacion-final-volkiw/)
+> Puedes acceder a través de este enlace: [Tienda de Volkiw](https://beta.adalab.es/modulo-2-evaluacion-final-Volkiw/)
