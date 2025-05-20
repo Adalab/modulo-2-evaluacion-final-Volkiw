@@ -28,7 +28,7 @@
 
 .form{
     padding: 20px 0;
-    &__input-buscador{
+    &__input-search{
         width: 80%;
         height: 30px;
         border:#cecece 1px solid;
@@ -41,11 +41,12 @@
         border-radius: 4px;
         height: 29px;
         color:#ffffff;
+        cursor: pointer;
 
     }
 }
 
-.producto{
+.product{
     width: 250px;
     padding: 8px;
 
@@ -78,6 +79,7 @@
         color:#ffffff;
         margin:10px auto;
         display:block;
+        cursor: pointer;
     }
 
     &__button:hover{
@@ -90,7 +92,7 @@
     }
 }
 
-.secc-carrito{
+.secc-cart{
     width: 30%;
     padding-left: 20px;
     
@@ -103,9 +105,18 @@
     &__list{
         list-style-type:none;
     }
+    &__delete{
+        color: vars.$color-secondary;
+        padding-top: 20px;
+        text-align: right;
+        width: 100%;
+        display:block;
+        text-decoration: underline;
+        cursor: pointer;
+    }
 }
 
-.carrito{
+.cart{
     display:flex;
     flex-direction:row;
     padding:15px 0;
@@ -142,6 +153,11 @@
         color:#ffffff;
         margin:10px;
         height:20px;
+        cursor: pointer;
     }
 } 
+
+.hidden {
+    display:none;
+}
 

@@ -1,86 +1,100 @@
 'use strict';
 
 // CONSTANTES
-const buscadorInput = document.querySelector(".js_input-buscador");
-const buscadorSubmit = document.querySelector(".js_submit-buscador");
-const listaProductos = document.querySelector(".js_list-productos");
-const listaCarrito = document.querySelector(".js_list-carrito");
-let productos = [];
-let carrito = [];
+const searchInput = document.querySelector(".js_input-search");
+const searchSubmit = document.querySelector(".js_submit-search");
+const listProducts = document.querySelector(".js_list-products");
+const listCart = document.querySelector(".js_list-cart");
+const deleteCart = document.querySelector(".js_delete_cart");
+let products = [];
+let cart = [];
 
 // local storage
-if (localStorage.getItem("carrito")!== null) {
-    carrito = JSON.parse(localStorage.getItem("carrito"));
+if (localStorage.getItem("cart")!== null) {
+    cart = JSON.parse(localStorage.getItem("cart"));
     renderSelectedProducts();
 };
 
-// Borrar el local storage::::
-// localStorage.removeItem("carrito");
-
 // FUNCIONES
-
-function itemSelected(){
-    for (let productoTienda of productos){
-        let carritoIndex = carrito.findIndex((productoCarrito) => productoCarrito.id === productoTienda.id );
-        let btn = document.getElementById(productoTienda.id);
-        if (carritoIndex !== -1){
-            btn.classList.add("producto__button--selected");
+function itemSelected(sample){
+    for (let productShop of sample){
+        let cartIndex = cart.findIndex((productCart) => productCart.id === productShop.id );
+        let btn = document.getElementById(productShop.id);
+        if (btn !== null) {
+        if (cartIndex !== -1){
+            btn.classList.add("product__button--selected");
             btn.innerHTML="Eliminar";
         } else{
-            btn.classList.remove("producto__button--selected");
+            btn.classList.remove("product__button--selected");
             btn.innerHTML="Comprar";
         };
+    }
     } 
 };
 
 function deleteSelectedProduct(ev){
     let binId = ev.currentTarget.id;
     console.log(binId);
-    const index = carrito.findIndex(carrito => "bin-" + carrito.id === binId);
-    carrito.splice(index, 1);
-    localStorage.setItem("carrito", JSON.stringify(carrito));
-    itemSelected();
+    const index = cart.findIndex(cart => "bin-" + cart.id === binId);
+    cart.splice(index, 1);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    itemSelected(products);
     renderSelectedProducts();
 };
-
 
 function initDeleteButtons(){
     let binProducts = document.querySelectorAll(".js_bin");
     binProducts.forEach((bin) => {
         bin.addEventListener("click", deleteSelectedProduct);
     });
-  };
+};
+
+function deleteCartList(){
+    localStorage.removeItem("cart");
+    cart = [];
+    renderSelectedProducts();
+    itemSelected(products);
+};
+
+function showBtnDeleteCartList(){
+    if (cart.length !== 0){
+        deleteCart.classList.remove("hidden");
+    } else{
+        deleteCart.classList.add("hidden");
+    }
+}
 
 function renderSelectedProducts(){
-    listaCarrito.innerHTML = " ";
+    listCart.innerHTML = " ";
     let compra = "";
-    for (let producto of carrito){
+    for (let product of cart){
         compra += `
             <li>
-                <div class="carrito">
-                    <div class="carrito__img" style="background-image: url('${producto.image}'), url('https://placehold.co/300x200');"></div>
-                    <p class="carrito__product-title">${producto.title} | ${producto.price}€</p>
-                    <button class="js_bin carrito__button" id="bin-${producto.id}">🗑️</button>
+                <div class="cart">
+                    <div class="cart__img" style="background-image: url('${product.image}'), url('https://placehold.co/50x50');"></div>
+                    <p class="cart__product-title">${product.title} | ${product.price}€</p>
+                    <button class="js_bin cart__button" id="bin-${product.id}">🗑️</button>
                 </div>
             </li>
         `;
     }
-    listaCarrito.innerHTML = compra;
-    localStorage.setItem("carrito", JSON.stringify(carrito));
+    listCart.innerHTML = compra;
+    localStorage.setItem("cart", JSON.stringify(cart));
     initDeleteButtons();
+    showBtnDeleteCartList();
 };
     
 function handleClickBuy(ev){
     let buyId = parseInt(ev.currentTarget.id);
-    let productoSeleccionado = productos.find((producto) => producto.id === buyId );
-    let carritoIndex = carrito.findIndex((producto) => producto.id === buyId );
-    if (carritoIndex === -1){
-        carrito.push(productoSeleccionado); 
+    let selectedProduct = products.find((product) => product.id === buyId );
+    let cartIndex = cart.findIndex((product) => product.id === buyId );
+    if (cartIndex === -1){
+        cart.push(selectedProduct); 
     } else{
-        carrito.splice( carritoIndex, 1 );
+        cart.splice( cartIndex, 1 );
     }
     renderSelectedProducts();
-    itemSelected();
+    itemSelected(products);
 };
 
 function forEachBuy(){
@@ -90,46 +104,47 @@ function forEachBuy(){
     });
 };
 
-function renderProducts(muestra){
-    listaProductos.innerHTML = " ";
+function renderProducts(sample){
+    listProducts.innerHTML = " ";
     let lista = "";
-    for (let producto of muestra){
+    for (let product of sample){
         lista += `
             <li>
-                <div class="producto">
-                    <div class="producto__img" style="background-image: url('${producto.image}'), url('https://placehold.co/300x200');"></div>
-                    <h4 class="producto__title">${producto.title}</h4>
-                    <p class="producto__price">${producto.price}€</p>
-                    <button class="js_comprar producto__button" id="${producto.id}">Comprar</button>
+                <div class="product">
+                    <div class="product__img" style="background-image: url('${product.image}'), url('https://placehold.co/300x200');"></div>
+                    <h4 class="product__title">${product.title}</h4>
+                    <p class="product__price">${product.price}€</p>
+                    <button class="js_comprar product__button" id="${product.id}">Comprar</button>
                 </div>
             </li>
         `;
     }
 
-    listaProductos.innerHTML = lista;
+    listProducts.innerHTML = lista;
+    
+
     forEachBuy();
     
 };
 
 function handleClickSearch(ev){
     ev.preventDefault();
-    const busqueda = buscadorInput.value;
-    const  listaBuscados = productos.filter(producto => producto.title.toLowerCase().includes(busqueda.toLowerCase()));
-    renderProducts(listaBuscados);
-  
+    const search = searchInput.value;
+    const  listSearch = products.filter(product => product.title.toLowerCase().includes(search.toLowerCase()));
+    renderProducts(listSearch); 
+    itemSelected(listSearch); 
 };
 
 // API
 fetch("https://fakestoreapi.com/products")
 .then((response) => response.json())
 .then((data) => {
-    productos = data;
-    renderProducts(productos);
-    itemSelected();
+    products = data;
+    renderProducts(products);
+    itemSelected(products);
 });
 
 
-
 // EVENTOS
-buscadorSubmit.addEventListener("click", handleClickSearch);
-
+searchSubmit.addEventListener("click", handleClickSearch);
+deleteCart.addEventListener("click", deleteCartList);
